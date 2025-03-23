@@ -1,0 +1,24 @@
+import numpy as np
+import dlib
+import face_recognition
+import mediapipe as mp
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from flask import Flask, request, jsonify
+from flask_ngrok import run_with_ngrok
+from PIL import Image  
+known_image = face_recognition.load_image_file("known_face.jpg")
+unknown_image = face_recognition.load_image_file("unknown_face.jpg")
+
+
+known_encoding = face_recognition.face_encodings(known_image)[0]
+unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+
+ 
+results = face_recognition.compare_faces([known_encoding], unknown_encoding)
+
+if results[0]:
+    print("✅ Face Matched!")
+else:
+    print("❌ Face Not Matched!") 
