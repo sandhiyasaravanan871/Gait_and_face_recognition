@@ -1,0 +1,30 @@
+# Define a simple gait classifier
+class GaitClassifier(nn.Module):
+    def __init__(self):
+        super(GaitClassifier, self).__init__()
+        self.fc1 = nn.Linear(256, 128)
+        self.fc2 = nn.Linear(128, 2)  # Two classes: (Authorized, Unauthorized)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+# Create and train the model
+model = GaitClassifier()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()
+
+# Dummy Training (Replace with real gait data)
+for epoch in range(10):
+    gait_features = torch.randn(1, 256)
+    labels = torch.tensor([1])  # 1 = Authorized, 0 = Unauthorized
+
+    optimizer.zero_grad()
+    outputs = model(gait_features)
+    loss = criterion(outputs, labels)
+    loss.backward()
+    optimizer.step()
+
+print("✅ Gait Model Trained!")
