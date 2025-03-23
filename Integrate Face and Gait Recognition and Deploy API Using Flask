@@ -1,0 +1,31 @@
+def authenticate(face_detected, face_matched, gait_matched):
+    if face_detected and face_matched:
+        return "✅ Face Authentication Successful"
+    elif not face_detected and gait_matched:
+        return "✅ Gait Authentication Successful"
+    else:
+        return "❌ Authentication Failed"
+
+# Example case
+face_detected = True
+face_matched = False
+gait_matched = True
+
+print(authenticate(face_detected, face_matched, gait_matched))
+
+app = Flask(__name__)
+run_with_ngrok(app)  # Run API via Ngrok in Colab
+
+@app.route("/authenticate", methods=["POST"])
+def authenticate():
+    file = request.files["image"]
+    image = face_recognition.load_image_file(file)
+    encoding = face_recognition.face_encodings(image)
+
+    if encoding:
+        return jsonify({"message": "Face Detected", "authenticated": True})
+    else:
+        return jsonify({"message": "Face Not Detected, Switching to Gait Recognition", "authenticated": False})
+
+if __name__ == "__main__":
+    app.run()
